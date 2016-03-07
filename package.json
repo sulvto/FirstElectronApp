@@ -1,5 +1,9 @@
 {
-	"name": "FirstElectronApp",
-  	"version":"0.1.0",	
-  	"main" : "main.js"
+    "name": "FirstElectronApp",
+    "version": "0.1.0",
+    "description": "My First Electron App",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    }
 }
