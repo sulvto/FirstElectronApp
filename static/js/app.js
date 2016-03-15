@@ -21,7 +21,6 @@ console.log(app);
 //}]);
 
 app.directive('mainNav', function () {
-
     return {
         restrict: 'A',
         templateUrl: 'static/view/nav.html',

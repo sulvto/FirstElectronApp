@@ -7,7 +7,6 @@ const BrowserWindow = electron.BrowserWindow;  // Module to create native browse
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
-var a = "qinchao";
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -24,7 +23,7 @@ app.on('ready', function () {
 
     // Create the browser window.
     mainWindow = new BrowserWindow({width: 800, height: 600});
-
+    mainWindow.setProgressBar(0.5);
     // and load the index.html of the app.
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     //mainWindow.loadRUL('http://www.douban.com/people/slzw/');
