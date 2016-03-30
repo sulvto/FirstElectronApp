@@ -20,10 +20,17 @@ console.log(app);
 //        });
 //}]);
 
-app.directive('mainNav', function () {
+app.directive('mainNavTop', function () {
     return {
         restrict: 'A',
-        templateUrl: 'static/view/nav.html',
+        templateUrl: 'static/view/navTop.html',
+        replace: true
+    }
+});
+app.directive('mainNavBottom', function () {
+    return {
+        restrict: 'A',
+        templateUrl: 'static/view/navBottom.html',
         replace: true
     }
 });
@@ -31,8 +38,8 @@ app.directive('mainNav', function () {
 app.directive('mainBody', function () {
     return {
         restrict: 'A',
-        templateUrl: 'static/view/body.html',
-        replace: true
+        replace: true,
+        templateUrl: 'static/view/body.html'
     }
 });
 

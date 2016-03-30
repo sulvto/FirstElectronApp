@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <style>
+        /*定义滚动条轨道 内阴影+圆角*/
+        ::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+        body { padding-top: 50px; }
+    </style>
 </head>
 <body ng-app="mainApp">
 
-<div main-nav></div>
+<div main-nav-top></div>
 <div main-body></div>
-
+<div main-nav-bottom></div>
 <div ng-controller="mainCtl">
 </div>
 
-We are using node
-<script>document.write(process.versions.node)</script>
-,
-Chrome
-<script>document.write(process.versions.chrome)</script>
-,
-and Electron
-<script>document.write(process.versions.electron)</script>
-.
 <!--<webview src="https://www.github.com/"></webview>-->
 <!-- Bootstrap's JavaScript requires jQuery -->
 <!--<script>window.$ = window.jQuery = require('.static/js/jquery.min.js');</script>-->
@@ -29,5 +30,7 @@ and Electron
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/angular.min.js"></script>
 <script src="static/js/app.js"></script>
+<script src="static/js/mu/core.js"></script>
+<script src="static/js/mu/pt_frame_index.js"></script>
 </body>
 </html>
