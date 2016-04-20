@@ -6,31 +6,76 @@
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <style>
         /*定义滚动条轨道 内阴影+圆角*/
-        ::-webkit-scrollbar-track
-        {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
             border-radius: 10px;
             background-color: #F5F5F5;
         }
-        body { padding-top: 50px; }
+
+        body {
+            padding-top: 50px;
+        }
     </style>
 </head>
 <body ng-app="mainApp">
 
-<div main-nav-top></div>
-<div main-body></div>
-<div main-nav-bottom></div>
 <div ng-controller="mainCtl">
 </div>
 
-<!--<webview src="https://www.github.com/"></webview>-->
+<webview id="webview" src="https://baidu.com" style="width:640px; height:680px" preload="static/js/guestPage.js"
+         nodeintegration></webview>
+
+
 <!-- Bootstrap's JavaScript requires jQuery -->
 <!--<script>window.$ = window.jQuery = require('.static/js/jquery.min.js');</script>-->
 <script src="static/js/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/angular.min.js"></script>
 <script src="static/js/app.js"></script>
-<script src="static/js/mu/core.js"></script>
-<script src="static/js/mu/pt_frame_index.js"></script>
+<script>
+    var APP = {};
+    APP.ipcRenderer = require('electron').ipcRenderer;
+
+    //    APP. ipcRenderer.on('asynchronous-reply', function (event, arg) {
+    //    });
+    APP.ipcRenderer.send("open-url", {"url": "https://baidu.com"});
+
+    var webview = document.getElementById("webview");
+
+
+    window.setTimeout(function () {
+        webview.openDevTools();
+        webview.executeJavaScript(
+                "var script =  document.createElement('script');" +
+                "script.setAttribute('src','//cdn.bootcss.com/jquery/2.1.2/jquery.min.js');" +
+                "document.body.appendChild(script);"
+        );
+
+        webview.addEventListener('ipc-message', function (event) {
+            console.log("EventListener");
+            console.log(event.channel);
+        });
+
+        webview.send('$', {'selector': '#kw', 'fns': [{'name': 'val', 'value': 'qinchao'}]});
+        webview.send('$', {'selector': '#su', 'fns': [{'name': 'trigger', 'value': 'click'}]});
+        window.setTimeout(function () {
+            webview.executeJavaScript(
+                    "var script =  document.createElement('script');" +
+                    "script.setAttribute('src','//cdn.bootcss.com/jquery/2.1.2/jquery.min.js');" +
+                    "document.body.appendChild(script);"
+            );
+
+            webview.send('$', {'selector': '#content_left .c-container', 'fns': [{'name':'html','value':undefined}]});
+        },1000);
+
+    }, 1000);
+
+    //    eval("return $('#content_left .c-container');")
+    //    var script111 =  document.createElement("script");
+    //    script111.setAttribute("src","//cdn.bootcss.com/jquery/2.1.2/jquery.min.js");
+    //    document.body.appendChild(script111)
+
+
+</script>
 </body>
 </html>

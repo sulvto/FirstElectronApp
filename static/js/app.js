@@ -20,29 +20,6 @@ console.log(app);
 //        });
 //}]);
 
-app.directive('mainNavTop', function () {
-    return {
-        restrict: 'A',
-        templateUrl: 'static/view/navTop.html',
-        replace: true
-    }
-});
-app.directive('mainNavBottom', function () {
-    return {
-        restrict: 'A',
-        templateUrl: 'static/view/navBottom.html',
-        replace: true
-    }
-});
-
-app.directive('mainBody', function () {
-    return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: 'static/view/body.html'
-    }
-});
-
 //controller
 app.controller('mainCtl', function ($scope) {
     console.log("RUN mainCtl");

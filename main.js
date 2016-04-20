@@ -26,10 +26,8 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({width: 800, height: 600});
     mainWindow.setProgressBar(0.5);
     // and load the index.html of the app.
-    //mainWindow.loadURL('file://' + __dirname + '/index.html');
-    //mainWindow.loadRUL('http://www.douban.com');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
 
-    console.log(mainWindow);
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
 
@@ -41,3 +39,13 @@ app.on('ready', function () {
         mainWindow = null;
     });
 });
+
+
+//========================  =======================================;
+
+ipcMain.on('open-url', function (event, arg) {
+    console.log("open-url", arg.url);
+    //event.sender.send('ipc-configInfo-reply', userConfig.get());
+});
+
+
