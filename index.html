@@ -4,34 +4,30 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <style>
-        /*定义滚动条轨道 内阴影+圆角*/
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            background-color: #F5F5F5;
-        }
-
-        body {
-            padding-top: 50px;
-        }
-    </style>
 </head>
-<body ng-app="mainApp">
+<body style="height: 700px">
 
-<div ng-controller="mainCtl">
-</div>
-
-<webview id="webview" src="https://baidu.com" style="width:640px; height:680px" preload="static/js/guestPage.js"
+<webview id="webview" src="https://baidu.com"
+         preload="static/js/guestPage.js"
          nodeintegration></webview>
+
+<br/>
+
+<input type="text"/>
+<button type="button">button1</button>
+
+<br/>
+
+<input type="text"/>
+<button type="button">button1</button>
 
 
 <!-- Bootstrap's JavaScript requires jQuery -->
 <!--<script>window.$ = window.jQuery = require('.static/js/jquery.min.js');</script>-->
-<script src="static/js/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
-<script src="static/js/bootstrap.min.js"></script>
-<script src="static/js/angular.min.js"></script>
-<script src="static/js/app.js"></script>
+<!--<script src="static/js/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
+<!--<script src="static/js/bootstrap.min.js"></script>-->
+<!--<script src="static/js/angular.min.js"></script>-->
+<!--<script src="static/js/app.js"></script>-->
 <script>
     var APP = {};
     APP.ipcRenderer = require('electron').ipcRenderer;
@@ -42,40 +38,87 @@
 
     var webview = document.getElementById("webview");
 
+    webview.addEventListener('ipc-message', function (event) {
+        console.log("ipc-message", event.channel);
+    });
 
-    window.setTimeout(function () {
-        webview.openDevTools();
-        webview.executeJavaScript(
-                "var script =  document.createElement('script');" +
-                "script.setAttribute('src','//cdn.bootcss.com/jquery/2.1.2/jquery.min.js');" +
-                "document.body.appendChild(script);"
-        );
-
-        webview.addEventListener('ipc-message', function (event) {
-            console.log("EventListener");
-            console.log(event.channel);
-        });
-
-        webview.send('$', {'selector': '#kw', 'fns': [{'name': 'val', 'value': 'qinchao'}]});
-        webview.send('$', {'selector': '#su', 'fns': [{'name': 'trigger', 'value': 'click'}]});
-        window.setTimeout(function () {
-            webview.executeJavaScript(
-                    "var script =  document.createElement('script');" +
-                    "script.setAttribute('src','//cdn.bootcss.com/jquery/2.1.2/jquery.min.js');" +
-                    "document.body.appendChild(script);"
-            );
-
-            webview.send('$', {'selector': '#content_left .c-container', 'fns': [{'name':'html','value':undefined}]});
-        },1000);
-
-    }, 1000);
 
     //    eval("return $('#content_left .c-container');")
     //    var script111 =  document.createElement("script");
     //    script111.setAttribute("src","//cdn.bootcss.com/jquery/2.1.2/jquery.min.js");
     //    document.body.appendChild(script111)
+    APP.sleep = function (ms) {
+        if (typeof ms === 'number') {
+            ms += new Date().getTime();
+            while (new Date().getTime() < ms) {
+            }
+        }
+    };
 
 
+    APP.WebviewOperation = function () {
+        this.webviewSend$ = function (selector, name, value) {
+            webview.send('$', {'selector': selector, 'fns': [{'name': name, 'value': value}]});
+        };
+
+        this.callTime = 0;
+        this.preSleep = 0;
+
+        this.getSleepTime = function (sleep) {
+            if (typeof sleep !== 'number') {
+                sleep = 0;
+            }
+            var nowTime = new Date().getTime();
+            this.preSleep = sleep + this.preSleep - (nowTime - this.callTime);
+            this.preSleep = this.preSleep > 0 ? this.preSleep : sleep;
+            this.callTime = nowTime;
+            return this.preSleep;
+        };
+
+        this.setTimeout = function (fun, sleep) {
+            window.setTimeout(fun, this.getSleepTime(sleep));
+        };
+
+        var that = this;
+        return {
+            click: function (selector, sleep) {
+                that.setTimeout(function () {
+                    that.webviewSend$(selector, 'trigger', 'click');
+                }, sleep);
+            },
+
+            val: function (selector, value, sleep) {
+                that.setTimeout(function () {
+                    that.webviewSend$(selector, 'val', value);
+                }, sleep);
+            },
+
+            attr: function (selector, value, sleep) {
+                that.setTimeout(function () {
+                    that.webviewSend$(selector, 'attr', value);
+                }, sleep);
+            },
+
+            load: function (url, sleep) {
+                that.setTimeout(function () {
+                    document.getElementById("webview").setAttribute("src", url);
+                }, sleep);
+            }
+        }
+    };
+
+    window.setTimeout(function () {
+        webview.openDevTools();
+        var operation = APP.WebviewOperation();
+        operation.val('#kw', 'qinchao');
+        operation.click('#su');
+//        operation.load("http://qinchao.me", 1000);
+        operation.attr('a', ['target', ''], 500);
+        operation.attr('#1 > h3 > a', ['href', 'http://qinchao.me'], 500);
+        operation.click('#1 > h3 > a', 1000);
+        operation.click('a', 1000);
+
+    }, 1000);
 </script>
 </body>
 </html>
